@@ -1,12 +1,13 @@
 import { Canvas } from "../Tools/Canvas";
 import { CanvasDrawing } from "./CanvasDrawing";
+import { Monster } from "../Monsters/Monster";
 
 export class CanvasText extends CanvasDrawing
 {
     public get Padding() { return this.padding; }
 
     constructor(protected x: number, protected y: number, private message: string, private fontSize: number, private fontStyle: string,
-        protected fillColor: string | number[], protected strokeColor: string, private padding: number){
+        protected fillColor: string | number[], protected strokeColor: string, protected strokeWidth: number, private padding: number){
 
         super();
         Canvas.Ctx.font = `${this.fontSize}px ${this.fontStyle}`;
@@ -47,7 +48,10 @@ export class CanvasText extends CanvasDrawing
             Canvas.Ctx.fillStyle = (this.fillColor instanceof Array)
                 ? `rgba(${this.fillColor[0]}, ${this.fillColor[1]}, ${this.fillColor[2]}, ${this.alpha})`: this.fillColor;
             Canvas.Ctx.font = `${this.fontSize}px ${this.fontStyle}`;
-            Canvas.Ctx.fillText(this.message, this.x, this.y);
+            if(this.message != "")
+                Canvas.Ctx.fillText(this.message, this.x, this.y);
+            else
+                Canvas.Ctx.fillText(Monster.ActiveMonster.Health.toString(), this.x, this.y);
         }
     }
 }

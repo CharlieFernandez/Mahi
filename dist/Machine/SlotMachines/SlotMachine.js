@@ -7,6 +7,7 @@ export class SlotMachine extends Rect {
         super(...slotMachineValues);
         this.allReels = [];
         this.allButtons = [];
+        this.soundMap.set(SoundFX.Win, AudioManager.addAudio("../../audio/Slot Machine Win.mp3"));
     }
     get AllReels() { return this.allReels; }
     startSlotMachine() {

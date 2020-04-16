@@ -4,8 +4,8 @@ export class ScoreSymbol extends SlotSymbol //implements IElemental
     constructor(imgPath, length, element) {
         super(imgPath, length, element);
         this.element = element;
-        this.value = 10;
     }
+    static get Value() { return this.value; }
     setNewValuesForTesting(imgPath, element, secondsOfDuration) {
         this.imgPath = imgPath;
         this.element = element;
@@ -13,3 +13,4 @@ export class ScoreSymbol extends SlotSymbol //implements IElemental
         setTimeout(() => this.imgElement.src = imgPath, secondsOfDuration);
     }
 }
+ScoreSymbol.value = 30;

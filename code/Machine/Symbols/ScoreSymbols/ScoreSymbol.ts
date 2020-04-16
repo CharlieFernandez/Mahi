@@ -3,7 +3,8 @@ import { Elements } from "../../../Enumerations/Elements";
 
 export class ScoreSymbol extends SlotSymbol //implements IElemental
 {
-    protected value: number = 10;
+    protected static value: number = 30;
+    public static get Value(){ return this.value; }
 
     constructor(imgPath: string, length: number, protected element: Elements)
     {

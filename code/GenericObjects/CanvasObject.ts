@@ -68,7 +68,7 @@ export abstract class CanvasObject
         });            
     }
 
-    private startAnimationTimer(animationMethod: ((...params:any[]) => void), animationEndMethod: ((...params:any[]) => void), durationInSeconds: number)
+    protected startAnimationTimer(animationMethod: ((...params:any[]) => void), animationEndMethod: ((...params:any[]) => void), durationInSeconds: number)
     {
         let durationInMilliseconds = durationInSeconds * 1000;
 
@@ -99,8 +99,6 @@ export abstract class CanvasObject
                 this.alpha = 1;
                 //Stop interaction
         }
-
-        console.log(durationInSeconds);
         
         this.animations.push(() => this.fadeLoop(animation, durationInSeconds));
         this.startAnimationTimer(() => this.fadeLoop(animation, durationInSeconds),
@@ -124,8 +122,6 @@ export abstract class CanvasObject
         Canvas.Ctx.globalAlpha = this.alpha;
         Canvas.ReelCtx.globalAlpha = this.alpha;
         this.alpha += alphaDelta;
-
-        console.log(this.alpha);
     }
 
     private fadeEnd(animation: FadeAnimations)

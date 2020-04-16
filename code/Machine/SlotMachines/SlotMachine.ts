@@ -13,6 +13,7 @@ export class SlotMachine extends Rect
     constructor(slotMachineValues: [number, number, number, number, string, string, number])
     {
         super(...slotMachineValues);
+        this.soundMap.set(SoundFX.Win, AudioManager.addAudio("../../audio/Slot Machine Win.mp3"));
     }
 
     public startSlotMachine()

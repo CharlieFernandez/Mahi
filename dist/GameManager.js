@@ -12,12 +12,19 @@ import { GrassMonster } from "./Monsters/GrassMonster";
 import { FireMonster } from "./Monsters/FireMonster";
 import { SlideAnimations } from "./Enumerations/Animations/SlideAnimation";
 import { Testing } from "./Tools/Testing";
+import { EnemyHealth } from "./GenericObjects/EnemyHealth";
+import { AudioManager } from "./Tools/AudioManager";
 let regularSlotMachine;
+let titleText;
 let gameText;
 let gameTextButton;
 let spinText;
 let spinButton;
 let monster;
+let enemyHealth;
+let enemyHealthBackground;
+let enemyCurrentHealth;
+let enemyTotalHealth;
 let testingButtons;
 let testingImages;
 export class GameManager {
@@ -32,6 +39,9 @@ export class GameManager {
                     break;
                 case GameStates.RegularRound:
                     GameManager.titleToRegular();
+                    break;
+                case GameStates.Result:
+                    GameManager.result();
                     break;
             }
         }
@@ -50,14 +60,24 @@ export class GameManager {
         }
     }
     static noneToTitle() {
-        gameText = new CanvasText(500, 225, "Launch Game", 30, "Arial", [255, 255, 255], "white", 25);
+        titleText = new CanvasText(500, 75, "Elemental Slots", 48, "Arial", [255, 255, 255], "black", 3, 25);
+        gameText = new CanvasText(600, 225, "START", 36, "Arial", [255, 255, 255], "darkgrey", 2, 25);
         let textValues = gameText.extractValuesForButton();
-        gameTextButton = Rect.createButton(textValues, "darkblue", "white", 1);
+        gameTextButton = Rect.createButton(textValues, "rgba(0, 0, 0, 0)", "white", 0.01);
         gameTextButton.sendMouseEvent(this.launchGame);
     }
     static titleToRegular() {
-        regularSlotMachine = new RegularSlotMachine();
-        regularSlotMachine.fade(FadeAnimations.FadeIn, 3);
+        if (regularSlotMachine == null) {
+            regularSlotMachine = new RegularSlotMachine();
+            regularSlotMachine.fade(FadeAnimations.FadeIn, 3);
+            spinText = new CanvasText(625, 400, "Spin", 30, "Arial", [255, 255, 255], "white", 2, 25);
+            let textValues = spinText.extractValuesForButton();
+            spinButton = Rect.createButton(textValues, "darkblue", "white", 1);
+            spinButton.sendMouseEvent(() => {
+                regularSlotMachine.startSlotMachine();
+            });
+            [testingButtons, testingImages] = Testing.createTestingButtons(regularSlotMachine);
+        }
         switch (Math.ceil(Math.random() * 3)) {
             case 1:
                 monster = new FireMonster();
@@ -71,20 +91,27 @@ export class GameManager {
         }
         monster.fade(FadeAnimations.FadeIn, 1);
         monster.slide(SlideAnimations.SlideToCurrentPosition, -100, 50, 1);
-        spinText = new CanvasText(800, 100, "Spin", 30, "Arial", [255, 255, 255], "white", 25);
-        let textValues = spinText.extractValuesForButton();
-        spinButton = Rect.createButton(textValues, "darkblue", "white", 1);
-        spinButton.sendMouseEvent(() => {
-            regularSlotMachine.startSlotMachine();
-        });
-        [testingButtons, testingImages] = Testing.createTestingButtons(regularSlotMachine);
+        enemyHealthBackground = new Rect(862.5, 125, 200, 10, "rgba(0,0,0,204)", "", 0.01);
+        enemyHealth = new EnemyHealth(monster);
+        enemyHealth.fade(FadeAnimations.FadeIn, 1);
+        enemyCurrentHealth = new CanvasText(enemyHealth.X + 50, enemyHealth.Y - 10, "", 18, "Arial", "white", "", 0.01, 0);
+        enemyTotalHealth = new CanvasText(enemyHealth.X + 80, enemyHealth.Y - 10, " / 100", 18, "Arial", "white", "", 0.01, 0);
         GameManager.GameState = GameStates.RegularRound;
     }
     static regularRoundState() {
-        //gameText.fade(FadeAnimations.FadeOut, 1);
         RegularReel.RegularReels.forEach((reel) => reel.performAction());
+        if (monster.Health <= 0)
+            GameManager.GameState = GameStates.Result;
+    }
+    static result() {
+        enemyHealth.fade(FadeAnimations.FadeOut, 1);
+        enemyHealthBackground.fade(FadeAnimations.FadeOut, 1);
+        enemyHealth.fade(FadeAnimations.FadeOut, 1);
+        enemyCurrentHealth.fade(FadeAnimations.FadeOut, 1);
+        setTimeout(() => GameManager.GameState = GameStates.RegularRound, 1100);
     }
     static launchGame() {
+        titleText.fade(FadeAnimations.FadeOut, 0.33);
         gameText.fade(FadeAnimations.FadeOut, 0.33);
         gameTextButton.fade(FadeAnimations.FadeOut, 0.33);
         setTimeout(() => GameManager.GameState = GameStates.RegularRound, 333);
@@ -92,6 +119,7 @@ export class GameManager {
 }
 GameManager.gameState = GameStates.None;
 window.onload = () => {
+    AudioManager.initializeSharedAudio();
     Canvas.startUpCanvases();
     prepareGame();
 };

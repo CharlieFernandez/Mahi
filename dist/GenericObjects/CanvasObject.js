@@ -69,7 +69,6 @@ export class CanvasObject {
                 this.alpha = 1;
             //Stop interaction
         }
-        console.log(durationInSeconds);
         this.animations.push(() => this.fadeLoop(animation, durationInSeconds));
         this.startAnimationTimer(() => this.fadeLoop(animation, durationInSeconds), () => this.fadeEnd(animation), durationInSeconds);
     }
@@ -85,7 +84,6 @@ export class CanvasObject {
         Canvas.Ctx.globalAlpha = this.alpha;
         Canvas.ReelCtx.globalAlpha = this.alpha;
         this.alpha += alphaDelta;
-        console.log(this.alpha);
     }
     fadeEnd(animation) {
         if (animation == FadeAnimations.FadeIn)

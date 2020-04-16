@@ -7,6 +7,8 @@ html, body
 body
 {
 	background: linear-gradient(rgb(35, 35, 105), rgb(14, 14, 71));
+	/* background: url("images/Background.png");
+	background-size: cover; */
 }
 
 .hidden

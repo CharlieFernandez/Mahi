@@ -170,6 +170,7 @@ export class Testing
     {
         let secondsDuration = Testing.millisecondsSwapChange / 1000;
         valuesSwapMethod();
+        
         currentSymbol.fade(FadeAnimations.FadeOut, secondsDuration);
         setTimeout(() =>
         {

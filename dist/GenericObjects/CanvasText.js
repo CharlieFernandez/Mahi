@@ -9,8 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Canvas } from "../Tools/Canvas";
 import { CanvasDrawing } from "./CanvasDrawing";
+import { Monster } from "../Monsters/Monster";
 export class CanvasText extends CanvasDrawing {
-    constructor(x, y, message, fontSize, fontStyle, fillColor, strokeColor, padding) {
+    constructor(x, y, message, fontSize, fontStyle, fillColor, strokeColor, strokeWidth, padding) {
         super();
         this.x = x;
         this.y = y;
@@ -19,6 +20,7 @@ export class CanvasText extends CanvasDrawing {
         this.fontStyle = fontStyle;
         this.fillColor = fillColor;
         this.strokeColor = strokeColor;
+        this.strokeWidth = strokeWidth;
         this.padding = padding;
         Canvas.Ctx.font = `${this.fontSize}px ${this.fontStyle}`;
         this.width = Canvas.Ctx.measureText(this.message).width;
@@ -48,7 +50,10 @@ export class CanvasText extends CanvasDrawing {
                 Canvas.Ctx.fillStyle = (this.fillColor instanceof Array)
                     ? `rgba(${this.fillColor[0]}, ${this.fillColor[1]}, ${this.fillColor[2]}, ${this.alpha})` : this.fillColor;
                 Canvas.Ctx.font = `${this.fontSize}px ${this.fontStyle}`;
-                Canvas.Ctx.fillText(this.message, this.x, this.y);
+                if (this.message != "")
+                    Canvas.Ctx.fillText(this.message, this.x, this.y);
+                else
+                    Canvas.Ctx.fillText(Monster.ActiveMonster.Health.toString(), this.x, this.y);
             }
         });
     }

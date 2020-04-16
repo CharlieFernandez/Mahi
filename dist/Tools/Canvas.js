@@ -15,7 +15,8 @@ export class Canvas {
     }
     static senseClick() {
         this.gameCanvas.addEventListener("click", (mouse) => {
-            this.allEvents.forEach((event) => event(mouse, this.CurrentScale));
+            if (this.interactionEnabled)
+                this.allEvents.forEach((event) => event(mouse, this.CurrentScale));
         });
     }
     static addMouseEvent(method) {
@@ -50,4 +51,5 @@ export class Canvas {
         this.reelCtx.clearRect(0, 0, this.reelCanvas.width, this.reelCanvas.height);
     }
 }
+Canvas.interactionEnabled = true;
 Canvas.allEvents = [];

@@ -1,7 +1,5 @@
 import { Sprite } from "../../GenericObjects/Sprite";
 import { Canvas } from "../../Tools/Canvas";
-import { SoundFX } from "../../Enumerations/SoundFX";
-import { AudioManager } from "../../Tools/AudioManager";
 export class SlotSymbol extends Sprite {
     constructor(imgPath, length, element) {
         super(imgPath);
@@ -10,12 +8,6 @@ export class SlotSymbol extends Sprite {
         this.height = length;
         this.type = element;
         SlotSymbol.allSymbols.push(this);
-        if (SlotSymbol.allSymbols.length == 1) {
-            this.soundMap.set(SoundFX.Win, AudioManager.addAudio("../../../audio/Slot Machine Win.mp3"));
-            this.soundMap.set(SoundFX.FireSound, AudioManager.addAudio("../../../audio/Fire Sound.mp3"));
-            this.soundMap.set(SoundFX.WaterSound, AudioManager.addAudio("../../../audio/Water Sound.wav"));
-            this.soundMap.set(SoundFX.GrassSound, AudioManager.addAudio("../../../audio/Grass Sound.wav"));
-        }
     }
     static get Spacing() { return this.spacing; }
     get Type() { return this.type; }

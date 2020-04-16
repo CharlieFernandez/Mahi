@@ -3,12 +3,14 @@ export class Canvas
     private static gameCanvas: HTMLCanvasElement;
     private static ctx: CanvasRenderingContext2D;
     private static reelCanvas: HTMLCanvasElement;
-    private static reelCtx: CanvasRenderingContext2D;
+    private static reelCtx: CanvasRenderingContext2D;    
 
     public static get GameCanvas(): HTMLCanvasElement { return this.gameCanvas; }
     public static get Ctx(): CanvasRenderingContext2D { return this.ctx; }
     public static get ReelCanvas(): HTMLCanvasElement { return this.reelCanvas; }
     public static get ReelCtx(): CanvasRenderingContext2D { return this.reelCtx; }
+
+    public static interactionEnabled = true;
 
     private static currentScale: number;
     public static get CurrentScale() { return this.currentScale; }
@@ -29,10 +31,11 @@ export class Canvas
 
     public static senseClick()
     {
-        this.gameCanvas.addEventListener("click", (mouse: MouseEvent)=>
-        {
-            this.allEvents.forEach((event) => event(mouse, this.CurrentScale));
-        });        
+            this.gameCanvas.addEventListener("click", (mouse: MouseEvent)=>
+            {
+                if(this.interactionEnabled)
+                    this.allEvents.forEach((event) => event(mouse, this.CurrentScale));
+            });        
     }
 
     public static addMouseEvent(method: any)

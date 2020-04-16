@@ -1,7 +1,7 @@
 import { Sprite } from "../GenericObjects/Sprite";
 import { Elements } from "../Enumerations/Elements";
-import { Canvas } from "../Tools/Canvas";
 import { FadeAnimations } from "../Enumerations/Animations/FadeAnimations";
+import { SlideAnimations } from "../Enumerations/Animations/SlideAnimation";
 export class Monster extends Sprite {
     constructor(imgPath) {
         super(imgPath);
@@ -10,11 +10,10 @@ export class Monster extends Sprite {
         this.weakness = Elements.Unknown;
         [this.x, this.y, this.width, this.height] = Monster.createMonsterValues();
         this.health = this.startingHealth;
-        let monsterAnims = Monster.monsterAnimations;
-        monsterAnims.jitter.startingXPos = this.x;
-        monsterAnims.death.endingYPos = this.y + this.height / 2;
+        this.startingXPosition = this.x;
         Monster.activeMonster = this;
     }
+    get Health() { return this.health; }
     static get ActiveMonster() { return this.activeMonster; }
     get Element() { return this.element; }
     get Weakness() { return this.weakness; }
@@ -25,51 +24,29 @@ export class Monster extends Sprite {
         let height = 250;
         return [x, y, width, height];
     }
-    hurtAnimation() {
-        let jitterAnim = Monster.monsterAnimations.jitter;
-        jitterAnim.currentJitter = 0;
-        this.animations.push(() => this.hurtLoop(jitterAnim));
+    setAssociatedHealth(enemyHealth) {
+        this.associatedHealth = enemyHealth;
     }
-    hurtLoop(jitterAnim) {
-        this.x += jitterAnim.intensity * jitterAnim.direction;
-        if (jitterAnim.timer % jitterAnim.length == 0)
-            jitterAnim.direction *= -1;
-        if (jitterAnim.timer == jitterAnim.animDuration) {
-            this.x = jitterAnim.startingXPos;
+    dealDamage(damageDealt) {
+        console.log("IM HURT");
+        this.health -= damageDealt;
+        this.hurtAnimation();
+    }
+    hurtAnimation() {
+        this.animations.push(() => this.hurtLoop());
+        this.startAnimationTimer(() => this.hurtLoop(), () => this.hurtEnd(), 1);
+    }
+    hurtLoop() {
+        this.alpha = (this.alpha == 1) ? 0 : 1;
+    }
+    hurtEnd() {
+        this.alpha = 1;
+        this.x = this.startingXPosition;
+        if (this.health <= 0)
             this.deathAnimation();
-            return true;
-        }
-        jitterAnim.timer++;
-        return false;
     }
     deathAnimation() {
-        let deathAnim = Monster.monsterAnimations.death;
-        this.fade(FadeAnimations.FadeOut, 0.05);
-        this.animations.push(() => this.deathLoop(deathAnim, Canvas.Ctx));
-    }
-    deathLoop(deathAnim, ctx) {
-        if (deathAnim.timer < deathAnim.riseTimer)
-            this.y -= deathAnim.yRise;
-        else
-            return true;
-        deathAnim.timer++;
-        return false;
+        this.slide(SlideAnimations.SlideFromCurrentPosition, 0, -50, 0.5);
+        this.fade(FadeAnimations.FadeOut, 0.5);
     }
 }
-Monster.monsterAnimations = {
-    timer: 0,
-    jitter: {
-        timer: 0,
-        startingXPos: undefined,
-        direction: 1,
-        length: 3,
-        intensity: 5,
-        animDuration: 40
-    },
-    death: {
-        timer: 0,
-        riseTimer: 35,
-        yRise: 3,
-        endingYPos: undefined,
-    }
-};

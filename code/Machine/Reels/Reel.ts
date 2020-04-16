@@ -51,13 +51,12 @@ export class Reel extends Rect
                     AudioManager.playAudio(this.soundMap.get(SoundFX.StopReel)!, 0);
                     this.currentSpeed = -Reel.slowSpeed;
                     break;
-                case "stop":
+                case "stop":                               
                     Testing.checkForSelectedSymbol(this.reelIndex, this.symbolsOnReel as ScoreSymbol[]);
-
                     if(Reel.reelsSpinning == 0)
                     {
                         if(this.symbolsOnReel[0] instanceof ScoreSymbol)
-                            WinConditions.checkResults();
+                        WinConditions.checkResults();                        
                     }
             }
                 
