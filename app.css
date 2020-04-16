@@ -1,23 +1,12 @@
 html, body
 {
 	margin: 0;
+	overflow: hidden;
 }
 
 body
 {
-	background-color: #ad2b11;
-	color: #DDDDDD;
-	text-shadow: 3px 3px black;
-}
-
-h1
-{
-	text-align: center;
-}
-
-canvas
-{
-	border: black 3px solid;
+	background: linear-gradient(rgb(35, 35, 105), rgb(14, 14, 71));
 }
 
 .hidden
